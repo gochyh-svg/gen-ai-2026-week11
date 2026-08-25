@@ -13,7 +13,7 @@ from openai import OpenAI
 
 from dotenv import load_dotenv
 
-load_dotenv()  # This loads variables from .env file
+load_dotenv(os.path.join(os.path.dirname(__file__), ".env"))
 
 # --- 1. CONFIGURATION ---
 SUPABASE_URL = os.getenv("SUPABASE_URL", "")
@@ -21,6 +21,20 @@ SUPABASE_KEY = os.getenv("SUPABASE_KEY", "")
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "")
 OPENROUTER_URL = "https://openrouter.ai/api/v1"
 ENABLE_LLM_SECURITY_CHECK = os.getenv("ENABLE_LLM_SECURITY_CHECK", "false").lower() == "true"
+
+missing_settings = [
+    name for name, value in {
+        "SUPABASE_URL": SUPABASE_URL,
+        "SUPABASE_KEY": SUPABASE_KEY,
+        "OPENROUTER_API_KEY": OPENROUTER_API_KEY,
+    }.items() if not value
+]
+if missing_settings:
+    raise RuntimeError(
+        "Missing required environment variables: "
+        + ", ".join(missing_settings)
+        + ". Create a .env file in the project root; see README.md for the required values."
+    )
 
 # Initialize Clients
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
