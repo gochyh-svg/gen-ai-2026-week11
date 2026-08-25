@@ -374,9 +374,10 @@ def get_documents():
         response = supabase.table("documents").select("*").order("id", desc=True).execute()
         return response.data if response.data else []
     except Exception as e:
-        print(f"[Documents] Error fetching documents: {e}")
-        import traceback
-        traceback.print_exc()
+        if "Could not find the table 'public.documents'" in str(e):
+            print("[Documents] Table public.documents is missing; run createTable.sql in the Supabase SQL Editor")
+        else:
+            print(f"[Documents] Error fetching documents: {e}")
         # Return empty array on error to allow frontend to continue
         return []
 

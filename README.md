@@ -59,6 +59,12 @@ python main.py
 
 The backend will run on `http://localhost:8000`
 
+Before uploading or querying documents, open the Supabase project SQL Editor and
+run the complete contents of [`createTable.sql`](createTable.sql). This creates
+the `documents`, `embeddings`, and `security_logs` tables plus the vector search
+function used by the backend. Restart the backend after applying the schema if
+the `/documents` endpoint previously reported that `public.documents` was missing.
+
 ### 3. Frontend Setup
 
 ```bash
