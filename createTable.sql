@@ -21,12 +21,12 @@ upload_date TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
 -- 4. Embeddings Table: Stores the actual text chunks and their vectors
--- Note: Dimensions are set to 4096 to match 'qwen3-embedding-8b'
+-- Dimensions match the default OpenRouter model: openai/text-embedding-3-small
 CREATE TABLE IF NOT EXISTS embeddings (
 id SERIAL PRIMARY KEY,
 doc_id INTEGER REFERENCES documents(id) ON DELETE CASCADE,
 content TEXT NOT NULL,
-embedding vector(4096)
+embedding vector(1536)
 );
 
 -- 5. Security Logs: Tracks potential prompt injection attempts
@@ -40,7 +40,7 @@ created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 -- 6. Vector Similarity Search Function
 -- This function is called by the Librarian Agent to find the most relevant context
 CREATE OR REPLACE FUNCTION match_embeddings (
-query_embedding vector(4096),
+query_embedding vector(1536),
 match_threshold float,
 match_count int,
 filter_doc_id int

@@ -19,7 +19,8 @@ load_dotenv(os.path.join(os.path.dirname(__file__), ".env"))
 SUPABASE_URL = os.getenv("SUPABASE_URL", "")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY", "")
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "")
-OPENROUTER_URL = "https://openrouter.ai/api/v1"
+OPENROUTER_URL = os.getenv("OPENROUTER_URL", "https://openrouter.ai/api/v1")
+EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "openai/text-embedding-3-small")
 ENABLE_LLM_SECURITY_CHECK = os.getenv("ENABLE_LLM_SECURITY_CHECK", "false").lower() == "true"
 
 missing_settings = [
@@ -63,11 +64,9 @@ class QueryRequest(BaseModel):
 
 def get_embedding(text: str) -> List[float]:
     """Calls the embedding model via OpenRouter/OpenAI."""
-    # Note: qwen/qwen3-embedding-8b is common, 
-    # but check OpenRouter for available embedding models like 'qwen/qwen3-embedding-8b'
     response = client.embeddings.create(
         input=[text.replace("\n", " ")],
-        model="qwen/qwen3-embedding-8b"
+        model=EMBEDDING_MODEL
     )
     return response.data[0].embedding
 

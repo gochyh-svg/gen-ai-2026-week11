@@ -102,6 +102,8 @@ SUPABASE_KEY="your_supabase_key"
 # OpenRouter API (LLM Provider)
 OPENROUTER_API_KEY=sk-or-v1-xxxxxxxxxxxx
 OPENROUTER_URL=https://openrouter.ai/api/v1
+# Optional; defaults to an OpenAI embedding model allowed by OpenRouter
+EMBEDDING_MODEL=openai/text-embedding-3-small
 ```
 
 ### Supabase Setup
@@ -126,7 +128,7 @@ CREATE TABLE embeddings (
   id BIGSERIAL PRIMARY KEY,
   doc_id BIGINT REFERENCES documents(id),
   content TEXT NOT NULL,
-  embedding VECTOR(4096),
+  embedding VECTOR(1536),
   created_at TIMESTAMP DEFAULT NOW()
 );
 ```
@@ -364,7 +366,7 @@ User Query
 
 ### Vector Search Process
 
-1. **Embed Query**: Convert user question to 4096-dim vector
+1. **Embed Query**: Convert user question to a 1536-dim vector
 2. **Fetch Embeddings**: Get all document chunk embeddings
 3. **Calculate Similarity**: Cosine similarity score for each chunk
 4. **Rank Results**: Sort by similarity (0.0 to 1.0)
